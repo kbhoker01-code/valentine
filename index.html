@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valentine?</title>
+  <title>Valentine Mini Game</title>
   <style>
     :root{
       --pink:#ff2e6f;
       --pink2:#ff5b8c;
       --bg:#fff1f6;
       --card:#ffffffcc;
-      --text:#222;
+      --text:#202020;
     }
-    *{box-sizing:border-box}
+    *{box-sizing:border-box;}
     body{
       margin:0;
       min-height:100vh;
@@ -20,23 +20,24 @@
       place-items:center;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(1100px 700px at 15% 15%, #ffd1df, transparent 60%),
-        radial-gradient(900px 700px at 85% 85%, #ffc1d6, transparent 55%),
+        radial-gradient(1100px 700px at 15% 10%, #ffd1df, transparent 60%),
+        radial-gradient(900px 700px at 85% 90%, #ffc1d6, transparent 55%),
         linear-gradient(135deg, var(--bg), #fff);
       overflow:hidden;
-      padding:24px;
       color:var(--text);
+      padding:24px;
     }
     .card{
-      width:min(560px, 92vw);
+      width:min(620px, 94vw);
       background:var(--card);
       backdrop-filter: blur(10px);
       border:1px solid rgba(255,255,255,.65);
       border-radius:22px;
       box-shadow: 0 20px 60px rgba(0,0,0,.12);
-      padding:26px 22px;
+      padding:22px 18px 18px;
       text-align:center;
       position:relative;
+      z-index:2;
     }
     .chip{
       display:inline-flex;
@@ -45,29 +46,47 @@
       border-radius:999px;
       background: rgba(255,46,111,.10);
       color: var(--pink);
-      font-weight:700;
+      font-weight:800;
       font-size:14px;
     }
     h1{
       margin:12px 0 6px;
-      font-size: clamp(26px, 4.8vw, 42px);
+      font-size: clamp(24px, 4.6vw, 40px);
       letter-spacing:-0.02em;
     }
-    p{ margin:0 0 18px; opacity:.85; }
-    .meterWrap{
-      margin:14px auto 18px;
-      width:min(420px, 92%);
+    p{margin:0 0 14px; opacity:.86; line-height:1.45;}
+    .stats{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 14px;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background:#fff;
+      box-shadow:0 10px 20px rgba(0,0,0,.06);
+      font-weight:800;
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .barWrap{
+      width:min(520px, 92%);
+      margin: 0 auto 14px;
       text-align:left;
     }
-    .meterLabel{
+    .barLabel{
       display:flex;
       justify-content:space-between;
-      font-weight:700;
-      font-size:14px;
+      font-weight:800;
+      font-size:13px;
       opacity:.9;
-      margin-bottom:8px;
+      margin-bottom:7px;
     }
-    .meter{
+    .bar{
       height:14px;
       background:#eee;
       border-radius:999px;
@@ -82,11 +101,13 @@
       transition: width .25s ease;
     }
     .btnRow{
-      display:flex;
+      display:none;
+      position:relative;
+      height:64px;
       justify-content:center;
-      gap:12px;
-      margin-top:10px;
-      flex-wrap:wrap;
+      align-items:center;
+      gap:14px;
+      margin-top:12px;
     }
     button{
       border:none;
@@ -94,7 +115,7 @@
       font-size:16px;
       border-radius:14px;
       cursor:pointer;
-      font-weight:800;
+      font-weight:900;
       transition: transform .12s ease, box-shadow .12s ease;
       -webkit-tap-highlight-color: transparent;
       user-select:none;
@@ -104,19 +125,61 @@
       background: linear-gradient(135deg, var(--pink), var(--pink2));
       box-shadow: 0 12px 24px rgba(255,46,111,.28);
     }
-    #yes:hover{transform: translateY(-1px) scale(1.02)}
+    #yes:hover{transform: translateY(-1px) scale(1.02);}
     #no{
       background:#f1f1f4;
       color:#444;
       box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      position:absolute;
+      left: calc(50% + 95px);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: .18s ease;
       transform-origin:center;
     }
-    .hint{font-size:13px; opacity:.72; margin-top:12px}
-    .toast{
+    .hint{font-size:13px; opacity:.72; margin-top:10px;}
+    .gameArea{
+      width:min(620px, 94vw);
+      height: 420px;
+      border-radius:20px;
+      background: rgba(255,255,255,.55);
+      border:1px dashed rgba(255,46,111,.25);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,.06);
+      margin:14px auto 0;
+      position:relative;
+      overflow:hidden;
+      touch-action: manipulation;
+    }
+    .tapNote{
       position:absolute;
+      left:12px; top:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:#fff;
+      font-weight:800;
+      font-size:13px;
+      box-shadow:0 10px 20px rgba(0,0,0,.06);
+      opacity:.95;
+    }
+    .heart{
+      position:absolute;
+      font-size:26px;
+      filter: drop-shadow(0 10px 14px rgba(255,46,111,.18));
+      animation: float 3.6s linear forwards;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @keyframes float{
+      from { transform: translateY(105%); opacity:.0; }
+      10% { opacity:1; }
+      to   { transform: translateY(-130%); opacity:0; }
+    }
+    .toast{
+      position:fixed;
       left:50%;
       transform:translateX(-50%);
-      bottom:-18px;
+      bottom:20px;
       background:#111;
       color:#fff;
       padding:10px 14px;
@@ -124,19 +187,19 @@
       font-size:13px;
       opacity:0;
       pointer-events:none;
-      transition: opacity .2s ease, transform .2s ease;
+      transition: opacity .18s ease, transform .18s ease;
       box-shadow:0 14px 26px rgba(0,0,0,.18);
+      z-index:10;
     }
-    .toast.show{opacity:1; transform: translateX(-50%) translateY(-8px);}
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
     .success{
       display:none;
-      text-align:center;
       animation: pop .35s ease both;
     }
     @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-    .big{font-size:56px; margin:10px 0 0}
+    .big{font-size:58px; margin:10px 0 0;}
     .confetti{
-      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+      position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:9;
     }
     .dot{
       position:absolute;
@@ -154,110 +217,219 @@
 <body>
 
   <div class="card" id="card">
-    <div class="chip">💌 Valentine Request</div>
-    <h1>Will you be my Valentine? 💖</h1>
-    <p>Try saying “No”… but the love meter might disagree 😭</p>
+    <div class="chip">🎮 Mini-Game Unlock</div>
+    <h1>Collect 10 hearts to unlock the question 💗</h1>
+    <p>Tap the floating hearts before they escape. When you reach 10… something important appears 😌</p>
 
-    <div class="meterWrap">
-      <div class="meterLabel">
-        <span>Love Meter</span>
-        <span id="percent">0%</span>
-      </div>
-      <div class="meter"><div class="fill" id="fill"></div></div>
+    <div class="stats">
+      <div class="pill">💖 Score: <span id="score">0</span>/10</div>
+      <div class="pill">⏱️ Time: <span id="time">30</span>s</div>
+      <div class="pill">🔥 Streak: <span id="streak">0</span></div>
     </div>
 
-    <div class="btnRow">
+    <div class="barWrap">
+      <div class="barLabel">
+        <span>Progress</span>
+        <span id="percent">0%</span>
+      </div>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+    </div>
+
+    <div class="gameArea" id="game">
+      <div class="tapNote">Tap hearts 💗</div>
+    </div>
+
+    <div class="btnRow" id="btnRow">
       <button id="yes">Yes 🥰</button>
       <button id="no">No 🙄</button>
     </div>
 
-    <div class="hint">Tip: On phone, tap “No” 😌</div>
-    <div class="toast" id="toast">Nice try 😭</div>
+    <div class="hint" id="hint">Tip: hearts move fast on purpose 😭</div>
   </div>
 
   <div class="card success" id="success">
     <div class="chip">✅ Accepted</div>
     <div class="big">💘</div>
-    <h1>Yay! It’s official 🥹</h1>
+    <h1>Yay! It’s a date 🥹</h1>
     <p>Happy Valentine’s! I knew you’d say yes 😄🌹</p>
     <p class="hint">Screenshot this and send it to me 😌</p>
   </div>
 
+  <div class="toast" id="toast">Nice!</div>
   <div class="confetti" id="confetti"></div>
 
 <script>
-  const no = document.getElementById("no");
-  const yes = document.getElementById("yes");
+  const game = document.getElementById("game");
+  const scoreEl = document.getElementById("score");
+  const timeEl = document.getElementById("time");
+  const streakEl = document.getElementById("streak");
   const fill = document.getElementById("fill");
-  const percent = document.getElementById("percent");
+  const percentEl = document.getElementById("percent");
   const toast = document.getElementById("toast");
+  const btnRow = document.getElementById("btnRow");
+  const hint = document.getElementById("hint");
+
+  const yes = document.getElementById("yes");
+  const no = document.getElementById("no");
   const card = document.getElementById("card");
   const success = document.getElementById("success");
   const confetti = document.getElementById("confetti");
 
-  let meter = 0;
-  let noScale = 1;
+  const heartChars = ["💗","💖","💘","💝","💕","❤️"];
+  let score = 0;
+  let streak = 0;
+  let timeLeft = 30;
+  let timer = null;
+  let spawner = null;
+  let unlocked = false;
 
   function showToast(msg){
     toast.textContent = msg;
     toast.classList.add("show");
-    setTimeout(()=>toast.classList.remove("show"), 650);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toast.classList.remove("show"), 650);
   }
 
-  function bumpMeter(){
-    meter = Math.min(100, meter + 18);
-    fill.style.width = meter + "%";
-    percent.textContent = meter + "%";
+  function updateProgress(){
+    const pct = Math.round((score/10)*100);
+    fill.style.width = pct + "%";
+    percentEl.textContent = pct + "%";
   }
 
-  function weakenNo(){
-    noScale = Math.max(0.55, noScale - 0.12);
-    no.style.transform = `scale(${noScale})`;
+  function spawnHeart(){
+    if(unlocked) return;
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+    const rect = game.getBoundingClientRect();
+    const x = Math.random() * (rect.width - 40) + 10;
+    const size = 22 + Math.random()*16;
+    const dur = 2.0 + Math.random()*2.1; // faster = more fun
+
+    h.style.left = x + "px";
+    h.style.bottom = "-40px";
+    h.style.fontSize = size + "px";
+    h.style.animationDuration = dur + "s";
+
+    // Click / tap to collect
+    h.addEventListener("click", () => collectHeart(h));
+    h.addEventListener("touchstart", (e)=>{ e.preventDefault(); collectHeart(h); }, {passive:false});
+
+    // Missed heart reduces streak
+    h.addEventListener("animationend", () => {
+      if(h.isConnected){
+        h.remove();
+        streak = 0;
+        streakEl.textContent = streak;
+      }
+    });
+
+    game.appendChild(h);
   }
 
-  function handleNo(){
-    bumpMeter();
-    weakenNo();
+  function collectHeart(h){
+    if(unlocked) return;
+    if(!timer) startGame();
 
-    const messages = [
-      "Nice try 😭",
-      "The meter says… nope 💗",
-      "Stop resisting 😌",
-      "It’s destiny 💘",
-      "Just press Yes already 🥹"
-    ];
-    showToast(messages[Math.min(messages.length-1, Math.floor(meter/25))]);
+    h.remove();
+    score = Math.min(10, score + 1);
+    streak += 1;
 
-    if (meter >= 90){
-      showToast("Okay okay… the only option left is YES 😌");
-      no.textContent = "…fine 😭";
+    scoreEl.textContent = score;
+    streakEl.textContent = streak;
+    updateProgress();
+
+    if(streak >= 4) showToast("🔥 Hot streak!");
+    else showToast("💖 +1");
+
+    // unlock at 10
+    if(score >= 10){
+      unlockQuestion();
     }
   }
 
-  no.addEventListener("mouseenter", handleNo);
-  no.addEventListener("click", handleNo);
-  no.addEventListener("touchstart", (e)=>{ e.preventDefault(); handleNo(); }, {passive:false});
+  function startGame(){
+    timer = setInterval(()=>{
+      timeLeft -= 1;
+      timeEl.textContent = timeLeft;
+      if(timeLeft <= 0){
+        endGame(false);
+      }
+    }, 1000);
+
+    spawner = setInterval(spawnHeart, 520);
+    // spawn some early hearts
+    for(let i=0;i<5;i++) setTimeout(spawnHeart, i*140);
+  }
+
+  function clearGame(){
+    clearInterval(timer); timer = null;
+    clearInterval(spawner); spawner = null;
+    game.querySelectorAll(".heart").forEach(x=>x.remove());
+  }
+
+  function endGame(won){
+    clearGame();
+    if(!won && !unlocked){
+      showToast("Try again 😭");
+      hint.textContent = "Time’s up 😭 Refresh the page and try again!";
+    }
+  }
+
+  function moveNo(){
+    const rect = btnRow.getBoundingClientRect();
+    const noRect = no.getBoundingClientRect();
+    const pad = 6;
+    const maxX = rect.width - noRect.width - pad;
+    const maxY = rect.height - noRect.height - pad;
+
+    const x = pad + Math.random() * Math.max(0, maxX);
+    const y = pad + Math.random() * Math.max(0, maxY);
+
+    no.style.left = x + "px";
+    no.style.top = y + "px";
+    no.style.transform = "translate(0,0)";
+  }
+
+  function unlockQuestion(){
+    unlocked = true;
+    clearGame();
+    showToast("Unlocked 😌💘");
+    hint.textContent = "Okay… now the real question 👀";
+    btnRow.style.display = "flex";
+    // place No nicely then let it run away
+    setTimeout(moveNo, 200);
+  }
 
   function launchConfetti(){
-    for(let i=0;i<80;i++){
+    for(let i=0;i<90;i++){
       const d = document.createElement("div");
       d.className = "dot";
       d.style.left = (Math.random()*100) + "vw";
       d.style.background = `hsl(${Math.random()*360}, 90%, 65%)`;
       const dur = 2.2 + Math.random()*2.2;
       d.style.animationDuration = dur + "s";
-      d.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
       confetti.appendChild(d);
       setTimeout(()=>d.remove(), dur*1000);
     }
   }
 
+  // No runs away once unlocked
+  no.addEventListener("mouseenter", ()=> unlocked && moveNo());
+  no.addEventListener("click", ()=> unlocked && moveNo());
+  no.addEventListener("touchstart", (e)=>{ if(unlocked){ e.preventDefault(); moveNo(); } }, {passive:false});
+
+  // Yes = success
   yes.addEventListener("click", ()=>{
     card.style.display = "none";
     success.style.display = "block";
     launchConfetti();
   });
-</script>
 
+  // Allow tapping empty space to start game quickly
+  game.addEventListener("click", ()=>{ if(!timer && !unlocked) startGame(); });
+  game.addEventListener("touchstart", ()=>{ if(!timer && !unlocked) startGame(); }, {passive:true});
+</script>
 </body>
 </html>
