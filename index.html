@@ -1,199 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine Mini Game 💖</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valentine 💖</title>
 
 <style>
-:root{
-  --pink:#ff2e6f;
-  --pink2:#ff5b8c;
-  --bg:#fff1f6;
-  --card:#ffffffcc;
-  --text:#222;
-}
+  :root{
+    --pink:#ff2e6f;
+    --pink2:#ff5b8c;
+    --bg:#fff1f6;
+    --card:#ffffffcc;
+    --text:#222;
+  }
+  *{box-sizing:border-box}
 
-*{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    background:
+      radial-gradient(900px 600px at 15% 10%, #ffd1df, transparent 60%),
+      radial-gradient(800px 600px at 85% 90%, #ffc1d6, transparent 55%),
+      linear-gradient(135deg, var(--bg), #fff);
+    padding:16px;
+    overflow:hidden;
+    color:var(--text);
+  }
 
-body{
-  margin:0;
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background:
-    radial-gradient(900px 600px at 15% 10%, #ffd1df, transparent 60%),
-    radial-gradient(800px 600px at 85% 90%, #ffc1d6, transparent 55%),
-    linear-gradient(135deg, var(--bg), #fff);
-  padding:16px;
-  overflow:hidden;
-}
+  /* ---------- Shared card style ---------- */
+  .card{
+    width:100%;
+    max-width:560px;
+    background:var(--card);
+    backdrop-filter: blur(10px);
+    border-radius:22px;
+    padding:20px 16px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+    position:relative;
+  }
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,46,111,.12);
+    color:var(--pink);
+    font-weight:900;
+    font-size:14px;
+  }
+  h1{
+    margin:12px 0 6px;
+    font-size:clamp(22px,5vw,38px);
+    letter-spacing:-0.02em;
+  }
+  p{margin:0 0 14px; opacity:.86; line-height:1.45;}
 
-.card{
-  width:100%;
-  max-width:520px;
-  background:var(--card);
-  backdrop-filter: blur(10px);
-  border-radius:22px;
-  padding:20px 16px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.12);
-}
+  /* ---------- Stage 1: Mini game ---------- */
+  .stats{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .stat{
+    background:#fff;
+    padding:8px 12px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:14px;
+    box-shadow:0 8px 18px rgba(0,0,0,.06);
+  }
+  .progress{
+    width:100%;
+    background:#eee;
+    height:14px;
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:14px;
+  }
+  .fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--pink),var(--pink2));
+    transition:width .25s ease;
+  }
+  .gameArea{
+    width:100%;
+    height:340px;
+    border-radius:18px;
+    background:#fff;
+    border:2px dashed rgba(255,46,111,.25);
+    position:relative;
+    overflow:hidden;
+  }
+  .tapNote{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:#fff;
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:13px;
+    box-shadow:0 6px 14px rgba(0,0,0,.08);
+    opacity:.95;
+  }
+  .heart{
+    position:absolute;
+    font-size:28px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-.chip{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(255,46,111,.12);
-  color:var(--pink);
-  font-weight:800;
-  font-size:14px;
-}
+  /* ---------- Stage 2: Valentine question ---------- */
+  .btnRow{
+    position:relative;
+    height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    margin-top:16px;
+  }
+  button{
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select:none;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  #yesBtn{
+    background:linear-gradient(135deg,var(--pink),var(--pink2));
+    color:#fff;
+    box-shadow:0 12px 24px rgba(255,46,111,.28);
+  }
+  #yesBtn:active{transform:scale(.98)}
+  #noBtn{
+    background:#f1f1f4;
+    color:#444;
+    position:absolute;
+    left:60%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 10px 22px rgba(0,0,0,.08);
+  }
 
-h1{
-  margin:12px 0 6px;
-  font-size:clamp(22px,5vw,36px);
-}
+  /* Toast */
+  .toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:13px;
+    opacity:0;
+    transition:.2s;
+    z-index:10;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
 
-p{
-  margin:0 0 14px;
-  opacity:.85;
-}
-
-.stats{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:12px;
-}
-
-.stat{
-  background:#fff;
-  padding:8px 12px;
-  border-radius:999px;
-  font-weight:800;
-  font-size:14px;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
-}
-
-.progress{
-  width:100%;
-  background:#eee;
-  height:14px;
-  border-radius:999px;
-  overflow:hidden;
-  margin-bottom:14px;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,var(--pink),var(--pink2));
-  transition:width .25s ease;
-}
-
-.gameArea{
-  width:100%;
-  height:320px;
-  border-radius:18px;
-  background:#fff;
-  border:2px dashed rgba(255,46,111,.25);
-  position:relative;
-  overflow:hidden;
-}
-
-.tapNote{
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:#fff;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:800;
-  font-size:13px;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
-}
-
-.heart{
-  position:absolute;
-  font-size:28px;
-  cursor:pointer;
-  user-select:none;
-}
-
-.buttons{
-  display:none;
-  justify-content:center;
-  gap:12px;
-  margin-top:14px;
-  position:relative;
-  height:60px;
-}
-
-button{
-  border:none;
-  padding:12px 18px;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-#yes{
-  background:linear-gradient(135deg,var(--pink),var(--pink2));
-  color:#fff;
-  box-shadow:0 12px 24px rgba(255,46,111,.28);
-}
-
-#no{
-  background:#eee;
-  color:#444;
-  position:absolute;
-  left:60%;
-  top:50%;
-  transform:translate(-50%,-50%);
-}
-
-.success{
-  display:none;
-  animation:pop .35s ease both;
-}
-
-@keyframes pop{
-  from{transform:scale(.95);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-
-.big{
-  font-size:56px;
-  margin:10px 0;
-}
-
-.toast{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#111;
-  color:#fff;
-  padding:10px 14px;
-  border-radius:999px;
-  font-size:13px;
-  opacity:0;
-  transition:.2s;
-}
-
-.toast.show{opacity:1; transform:translateX(-50%) translateY(-8px)}
+  /* Success */
+  .success{
+    display:none;
+    animation:pop .35s ease both;
+  }
+  @keyframes pop{
+    from{transform:scale(.95);opacity:0}
+    to{transform:scale(1);opacity:1}
+  }
+  .big{
+    font-size:56px;
+    margin:10px 0 0;
+  }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="card">
+<!-- STAGE 1: MINI GAME -->
+<div class="card" id="stageGame">
   <div class="chip">🎮 Mini-Game Unlock</div>
   <h1>Collect 10 hearts 💖</h1>
   <p>Tap the hearts before they reach the top 😌</p>
@@ -209,114 +209,176 @@ button{
     <div class="tapNote">Tap hearts 💗</div>
   </div>
 
-  <div class="buttons" id="buttons">
-    <button id="yes">Yes 🥰</button>
-    <button id="no">No 🙄</button>
-  </div>
+  <p style="margin-top:12px; font-size:13px; opacity:.7;">
+    Tap anywhere inside the box to start.
+  </p>
 </div>
 
+<!-- STAGE 2: VALENTINE QUESTION -->
+<div class="card" id="stageValentine" style="display:none;">
+  <div class="chip">💌 Important Question</div>
+  <h1>Will you be my Valentine? 💘</h1>
+  <p>I made you play a game first… now answer honestly 😌💖</p>
+
+  <div class="btnRow" id="arena">
+    <button id="yesBtn">Yes 🥰</button>
+    <button id="noBtn">No 🙄</button>
+  </div>
+
+  <p style="margin-top:10px; font-size:13px; opacity:.7;">
+    Tip: try pressing “No” 😭
+  </p>
+</div>
+
+<!-- SUCCESS -->
 <div class="card success" id="success">
-  <div class="chip">💘 Accepted</div>
+  <div class="chip">✅ Accepted</div>
   <div class="big">💖</div>
   <h1>Yay! It’s a date 🥹</h1>
-  <p>Happy Valentine’s 💐</p>
+  <p>Happy Valentine’s! 🌹</p>
 </div>
 
 <div class="toast" id="toast">+1 💗</div>
 
 <script>
-const game = document.getElementById("game");
-const scoreEl = document.getElementById("score");
-const timeEl = document.getElementById("time");
-const fill = document.getElementById("fill");
-const buttons = document.getElementById("buttons");
-const yes = document.getElementById("yes");
-const no = document.getElementById("no");
-const card = document.getElementById("card");
-const success = document.getElementById("success");
-const toast = document.getElementById("toast");
+  // ---------- Toast ----------
+  const toast = document.getElementById("toast");
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toast.classList.remove("show"), 650);
+  }
 
-const hearts = ["💗","💖","💘","💝","💕","❤️"];
-let score = 0;
-let timeLeft = 30;
-let timer, spawner;
-let unlocked = false;
+  // ---------- Stage 1: Game ----------
+  const stageGame = document.getElementById("stageGame");
+  const stageValentine = document.getElementById("stageValentine");
+  const success = document.getElementById("success");
 
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),600);
-}
+  const game = document.getElementById("game");
+  const scoreEl = document.getElementById("score");
+  const timeEl = document.getElementById("time");
+  const fill = document.getElementById("fill");
 
-function updateProgress(){
-  fill.style.width = (score/10)*100 + "%";
-}
+  const heartChars = ["💗","💖","💘","💝","💕","❤️"];
+  let score = 0;
+  let timeLeft = 30;
+  let timer = null;
+  let spawner = null;
+  let unlocked = false;
 
-function spawnHeart(){
-  if(unlocked) return;
+  function updateProgress(){
+    fill.style.width = (score/10)*100 + "%";
+  }
 
-  const rect = game.getBoundingClientRect();
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+  function startGame(){
+    if (timer || unlocked) return;
 
-  const x = Math.random()*(rect.width-40);
-  h.style.left = x+"px";
-  h.style.bottom = "0px";
+    timer = setInterval(()=>{
+      timeLeft--;
+      timeEl.textContent = timeLeft;
+      if(timeLeft <= 0){
+        clearInterval(timer);
+        clearInterval(spawner);
+        timer = null;
+        spawner = null;
+        showToast("Time up 😭 Refresh to try again");
+      }
+    }, 1000);
 
-  game.appendChild(h);
+    spawner = setInterval(spawnHeart, 520);
+    for(let i=0;i<6;i++) setTimeout(spawnHeart, i*140);
+  }
 
-  const anim = h.animate([
-    { transform:"translateY(0)", opacity:1 },
-    { transform:`translateY(-${rect.height+60}px)`, opacity:0 }
-  ], { duration:2500, easing:"linear" });
+  function spawnHeart(){
+    if(unlocked) return;
 
-  h.onclick = ()=>{
-    h.remove();
-    score++;
-    scoreEl.textContent = score;
-    updateProgress();
-    showToast("+1 💗");
-    if(score>=10) unlock();
-  };
+    const rect = game.getBoundingClientRect();
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
 
-  anim.onfinish = ()=> h.remove();
-}
+    // Spawn INSIDE the box
+    const x = Math.random() * (rect.width - 40);
+    h.style.left = x + "px";
+    h.style.bottom = "0px";
 
-function start(){
-  timer = setInterval(()=>{
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if(timeLeft<=0) clearInterval(timer);
-  },1000);
+    game.appendChild(h);
 
-  spawner = setInterval(spawnHeart,500);
-}
+    // iPhone-friendly animation
+    const anim = h.animate(
+      [
+        { transform:"translateY(0)", opacity:1 },
+        { transform:`translateY(-${rect.height + 80}px)`, opacity:0 }
+      ],
+      { duration: 2400, easing:"linear", fill:"forwards" }
+    );
 
-function unlock(){
-  unlocked = true;
-  clearInterval(spawner);
-  clearInterval(timer);
-  buttons.style.display="flex";
-  showToast("Unlocked 😌");
-}
+    function collect(){
+      if(!h.isConnected) return;
+      h.remove();
+      score++;
+      scoreEl.textContent = score;
+      updateProgress();
+      showToast("+1 💗");
 
-function moveNo(){
-  const box = buttons.getBoundingClientRect();
-  const x = Math.random()*(box.width-80);
-  const y = Math.random()*(box.height-40);
-  no.style.left = x+"px";
-  no.style.top = y+"px";
-}
+      if(score >= 10) unlockToValentine();
+    }
 
-game.addEventListener("click", ()=> !timer && start());
-no.addEventListener("mouseenter", moveNo);
-no.addEventListener("click", moveNo);
+    h.addEventListener("click", collect);
+    h.addEventListener("touchstart", (e)=>{ e.preventDefault(); collect(); }, {passive:false});
 
-yes.onclick = ()=>{
-  card.style.display="none";
-  success.style.display="block";
-};
+    anim.onfinish = ()=> { if(h.isConnected) h.remove(); };
+  }
+
+  function unlockToValentine(){
+    unlocked = true;
+    clearInterval(timer);
+    clearInterval(spawner);
+
+    // Remove everything (switch pages)
+    stageGame.style.display = "none";
+    stageValentine.style.display = "block";
+
+    showToast("Unlocked 😌💘");
+
+    // Place No button nicely once it appears
+    setTimeout(moveNo, 250);
+  }
+
+  // Start when tapping inside the game box
+  game.addEventListener("click", startGame);
+  game.addEventListener("touchstart", startGame, {passive:true});
+
+  // ---------- Stage 2: Valentine ----------
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const arena = document.getElementById("arena");
+
+  function moveNo(){
+    const arenaRect = arena.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const pad = 6;
+
+    const maxX = arenaRect.width - btnRect.width - pad;
+    const maxY = arenaRect.height - btnRect.height - pad;
+
+    const x = pad + Math.random() * Math.max(0, maxX);
+    const y = pad + Math.random() * Math.max(0, maxY);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.transform = "translate(0,0)";
+  }
+
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("click", moveNo);
+  noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveNo(); }, {passive:false});
+
+  yesBtn.addEventListener("click", ()=>{
+    stageValentine.style.display = "none";
+    success.style.display = "block";
+  });
 </script>
 
 </body>
